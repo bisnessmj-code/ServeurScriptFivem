@@ -1,0 +1,558 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   HUD Health Armor Bank - FIGHT LEAGUE AGGRESSIVE v3.5.0
+   Style: Dark, Flashy, Red Accents, High Contrast
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&display=swap');
+
+:root {
+    /* ══════════════════════════════════════════════════════════════════════
+       DIMENSIONS
+       ══════════════════════════════════════════════════════════════════════ */
+    --hud-height: 42px;
+    --hud-width: 210px;
+    --hud-radius: 3px;
+    --track-height: 10px;
+    --icon-size: 30px;
+    --padding-x: 12px;
+    --border-accent-width: 4px;
+    --skew-angle: -2deg;
+    
+    /* ══════════════════════════════════════════════════════════════════════
+       COULEURS - AGGRESSIVE RED THEME
+       ══════════════════════════════════════════════════════════════════════ */
+    
+    /* Backgrounds */
+    --bg-primary: rgba(8, 8, 8, 0.95);
+    --bg-card: rgba(15, 15, 15, 0.98);
+    --bg-card-inner: rgba(20, 20, 20, 0.9);
+    --bg-track: #050505;
+    
+    /* Rouge primaire (signature) */
+    --red-dark: #2a0a0a;
+    --red-mid: #8B2020;
+    --red-bright: #DC3545;
+    --red-neon: #FF3347;
+    --red-glow: rgba(220, 53, 69, 0.6);
+    --red-glow-intense: rgba(255, 51, 71, 0.8);
+    
+    /* Textes */
+    --text-primary: #f0f0f0;
+    --text-secondary: #ffffff;
+    --text-bright: #ffffff;
+    
+    /* Health - Rouge intense */
+    --health-start: #FF3347;
+    --health-mid: #DC3545;
+    --health-end: #8B2020;
+    --health-glow: rgba(255, 51, 71, 0.7);
+    
+    /* Armor - Gris acier avec reflet rouge */
+    --armor-start: #5a5a5a;
+    --armor-mid: #3d3d3d;
+    --armor-end: #252525;
+    --armor-glow: rgba(90, 90, 90, 0.4);
+    --armor-accent: rgba(220, 53, 69, 0.15);
+    
+    /* Danger - Rouge pulsant */
+    --danger-color: #FF1A1A;
+    --danger-glow: rgba(255, 26, 26, 0.9);
+    
+    /* Bank - Rouge au lieu de vert */
+    --bank-color: #FF3347;
+    --bank-glow: rgba(255, 51, 71, 0.5);
+    
+    /* ID */
+    --id-color: #888888;
+    
+    /* Transitions */
+    --transition-speed: 180ms;
+    --transition-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: transparent;
+    color: var(--text-primary);
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-weight: 600;
+    overflow: hidden;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GROUPES HUD
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud-group {
+    position: absolute;
+    display: flex;
+    gap: 6px;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.hud-group--top {
+    right: 14px;
+    top: 60px;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.hud-group--bottom {
+    left: 4px;
+    bottom: 4px;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARTE HUD - AGGRESSIVE STYLE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: var(--hud-height);
+    width: var(--hud-width);
+    background: var(--bg-card);
+    border-radius: var(--hud-radius);
+    padding: 0 var(--padding-x);
+    position: relative;
+    overflow: visible;
+    transition: box-shadow var(--transition-speed) var(--transition-easing),
+                border-color var(--transition-speed) var(--transition-easing);
+    transform: skewX(var(--skew-angle));
+    
+    /* Double bordure effet tech */
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    box-shadow: 
+        0 0 20px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Contre-skew pour le contenu */
+.hud > * {
+    transform: skewX(calc(var(--skew-angle) * -1));
+}
+
+/* Accent latéral BOLD */
+.hud::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -1px;
+    bottom: -1px;
+    width: var(--border-accent-width);
+    background: linear-gradient(180deg, 
+        var(--red-neon) 0%, 
+        var(--red-bright) 50%,
+        var(--red-mid) 100%
+    );
+    border-radius: var(--hud-radius) 0 0 var(--hud-radius);
+    box-shadow: 
+        0 0 15px var(--red-glow),
+        0 0 30px var(--red-glow);
+    transform: skewX(0);
+}
+
+/* Ligne supérieure lumineuse */
+.hud::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: var(--border-accent-width);
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        var(--red-bright) 0%,
+        rgba(220, 53, 69, 0.3) 30%,
+        transparent 100%
+    );
+    transform: skewX(0);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ICÔNE - AGGRESSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud__icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    min-width: var(--icon-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    flex-shrink: 0;
+    transition: all var(--transition-speed) var(--transition-easing);
+    position: relative;
+    z-index: 1;
+}
+
+.hud__icon svg {
+    display: block;
+    filter: drop-shadow(0 0 3px currentColor);
+    transition: filter var(--transition-speed) var(--transition-easing);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BARRE DE PROGRESSION - TECH STYLE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud__bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.hud__track {
+    width: 100%;
+    height: var(--track-height);
+    background: var(--bg-track);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    
+    /* Effet enfoncé prononcé */
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+    
+    /* Grid pattern subtil */
+    background-image: 
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 8px 100%;
+}
+
+.hud__fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 2px;
+    transition: width var(--transition-speed) var(--transition-easing);
+    will-change: width;
+    position: relative;
+}
+
+/* Effet de brillance animé */
+.hud__fill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+    );
+    animation: shine 3s ease-in-out infinite;
+}
+
+@keyframes shine {
+    0%, 100% { left: -100%; }
+    50% { left: 150%; }
+}
+
+/* Reflet supérieur */
+.hud__fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.35) 0%, 
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 100%
+    );
+    border-radius: 2px 2px 0 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TEXTE - BOLD NUMBERS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud__text {
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-bright);
+    text-shadow: 
+        0 0 10px currentColor,
+        0 2px 4px rgba(0, 0, 0, 0.8);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VARIANTES - ID PLAYER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud--id .hud__icon {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    color: var(--id-color);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.hud--id .hud__bar {
+    justify-content: flex-end;
+}
+
+.hud--id .hud__text {
+    color: var(--text-secondary);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    flex: 1;
+    text-align: right;
+    font-size: 15px;
+    text-shadow: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VARIANTES - BANK (ROUGE)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud--bank .hud__icon {
+    background: linear-gradient(135deg, var(--red-dark) 0%, #0a0505 100%);
+    color: var(--bank-color);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    box-shadow: 
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 0 10px rgba(220, 53, 69, 0.2);
+}
+
+.hud--bank .hud__bar {
+    justify-content: flex-end;
+}
+
+.hud--bank .hud__text {
+    color: var(--bank-color);
+    flex: 1;
+    text-align: right;
+    text-shadow: 
+        0 0 15px var(--bank-glow),
+        0 0 30px var(--bank-glow);
+    animation: moneyGlow 2s ease-in-out infinite;
+}
+
+@keyframes moneyGlow {
+    0%, 100% { 
+        text-shadow: 
+            0 0 15px var(--bank-glow),
+            0 0 30px var(--bank-glow);
+    }
+    50% { 
+        text-shadow: 
+            0 0 20px var(--red-glow-intense),
+            0 0 40px var(--bank-glow);
+    }
+}
+
+/* Accent rouge pour bank */
+.hud--bank::before {
+    background: linear-gradient(180deg, 
+        var(--red-neon) 0%, 
+        var(--red-bright) 100%
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VARIANTES - HEALTH (ROUGE NÉON)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud--health .hud__icon {
+    background: linear-gradient(135deg, var(--red-dark) 0%, #0a0505 100%);
+    color: var(--red-neon);
+    border: 1px solid rgba(255, 51, 71, 0.4);
+    box-shadow: 
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 0 15px rgba(255, 51, 71, 0.3);
+}
+
+.hud--health .hud__fill {
+    background: linear-gradient(90deg, 
+        var(--health-start) 0%, 
+        var(--health-mid) 50%,
+        var(--health-end) 100%
+    );
+    box-shadow: 
+        0 0 15px var(--health-glow),
+        0 0 30px rgba(255, 51, 71, 0.4),
+        inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VARIANTES - HEALTH DANGER (CRITICAL) - LIGHT PULSE VERSION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud--health.danger {
+    animation: dangerGlowCard 0.6s ease-in-out infinite;
+}
+
+.hud--health.danger .hud__fill {
+    background: linear-gradient(90deg, 
+        var(--danger-color) 0%, 
+        #cc1111 100%
+    );
+    box-shadow: 
+        0 0 20px var(--danger-glow),
+        0 0 40px var(--danger-glow);
+    animation: dangerFillGlow 0.6s ease-in-out infinite;
+}
+
+.hud--health.danger .hud__icon {
+    animation: dangerIconGlow 0.6s ease-in-out infinite;
+}
+
+.hud--health.danger::before {
+    animation: dangerBorderGlow 0.6s ease-in-out infinite;
+}
+
+/* Glow pulsant sur la carte entière */
+@keyframes dangerGlowCard {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(0, 0, 0, 0.8),
+            0 0 15px rgba(255, 26, 26, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 26, 26, 0.4);
+    }
+    50% {
+        box-shadow: 
+            0 0 20px rgba(0, 0, 0, 0.8),
+            0 0 40px rgba(255, 26, 26, 0.7),
+            0 0 80px rgba(255, 26, 26, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 26, 26, 0.9);
+    }
+}
+
+/* Glow pulsant sur la barre de vie */
+@keyframes dangerFillGlow {
+    0%, 100% {
+        box-shadow: 
+            0 0 15px rgba(255, 26, 26, 0.5),
+            0 0 30px rgba(255, 26, 26, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(255, 26, 26, 0.9),
+            0 0 60px rgba(255, 26, 26, 0.6),
+            0 0 100px rgba(255, 26, 26, 0.3);
+    }
+}
+
+/* Glow pulsant sur l'icône */
+@keyframes dangerIconGlow {
+    0%, 100% {
+        box-shadow: 
+            0 0 10px rgba(255, 26, 26, 0.3),
+            inset 0 0 5px rgba(255, 26, 26, 0.1);
+    }
+    50% {
+        box-shadow: 
+            0 0 25px rgba(255, 26, 26, 0.8),
+            0 0 50px rgba(255, 26, 26, 0.4),
+            inset 0 0 10px rgba(255, 26, 26, 0.2);
+    }
+}
+
+/* Glow pulsant sur la bordure latérale */
+@keyframes dangerBorderGlow {
+    0%, 100% {
+        box-shadow: 
+            0 0 15px rgba(255, 26, 26, 0.5),
+            0 0 30px rgba(255, 26, 26, 0.2);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(255, 26, 26, 0.9),
+            0 0 60px rgba(255, 26, 26, 0.6),
+            0 0 100px rgba(255, 26, 26, 0.3);
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VARIANTES - ARMOR (ACIER AVEC REFLET ROUGE)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hud--armor .hud__icon {
+    background: linear-gradient(135deg, #2a2a2a 0%, #151515 100%);
+    color: #7a7a7a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.hud--armor .hud__fill {
+    background: linear-gradient(90deg, 
+        var(--armor-start) 0%, 
+        var(--armor-mid) 50%,
+        var(--armor-end) 100%
+    );
+    box-shadow: 
+        0 0 10px var(--armor-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 0 20px var(--armor-accent);
+}
+
+/* Reflet rouge subtil sur armor */
+.hud--armor .hud__fill::after {
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        rgba(220, 53, 69, 0.05) 50%,
+        transparent 100%
+    );
+}
+
+/* Accent gris acier */
+.hud--armor::before {
+    background: linear-gradient(180deg, 
+        #6a6a6a 0%, 
+        #4a4a4a 50%,
+        #2a2a2a 100%
+    );
+    box-shadow: 
+        0 0 10px rgba(100, 100, 100, 0.3),
+        0 0 20px rgba(100, 100, 100, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media screen and (max-width: 1600px) {
+    :root {
+        --hud-width: 190px;
+        --hud-height: 38px;
+        --icon-size: 26px;
+        --track-height: 8px;
+    }
+    
+    .hud__text {
+        font-size: 14px;
+    }
+}
