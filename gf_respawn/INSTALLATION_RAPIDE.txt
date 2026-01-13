@@ -1,0 +1,132 @@
+# 🚀 GUIDE D'INSTALLATION RAPIDE - GF Respawn v5.0
+
+## 📦 Installation
+
+1. **Extraire** le dossier `gf_respawn` dans votre dossier `resources/`
+2. **Ajouter** dans votre `server.cfg` :
+   ```
+   ensure gf_respawn
+   ```
+3. **Redémarrer** le serveur
+
+## ⚙️ Configuration de base
+
+Ouvrez `gf_respawn/config/config.lua` :
+
+```lua
+-- Mode debug (mettre true pour voir les logs)
+Config.Debug = false
+
+-- Position du spawn (modifiez selon votre map)
+Config.SpawnPosition = {
+    x = -2661.085694,
+    y = -765.454956,
+    z = 5.993408,
+    heading = 274.960632
+}
+
+-- Système de compatibilité (IMPORTANT !)
+Config.EnableCompatibility = true
+Config.DisableInBuckets = true
+Config.AllowedBuckets = {0}
+```
+
+## 🎮 Utilisation in-game
+
+- **Mort** : Attendre le timer, puis :
+  - `E` : Respawn sur place
+  - `F` : Respawn au lobby
+- **Heal** : Appuyer sur `H` (ne pas bouger pendant 2 secondes)
+
+## 🔗 Intégration avec vos scripts de jeu
+
+### Méthode 1 : Avec routing buckets (RECOMMANDÉ ⭐)
+
+Dans votre script gunfight/deathmatch, côté serveur :
+
+```lua
+-- Début du match
+SetPlayerRoutingBucket(playerId, 1)  -- Le respawn se désactive AUTO
+
+-- Fin du match
+SetPlayerRoutingBucket(playerId, 0)  -- Le respawn se réactive AUTO
+```
+
+**C'EST TOUT !** Aucun code supplémentaire nécessaire.
+
+### Méthode 2 : Sans routing buckets
+
+Côté serveur de votre script :
+
+```lua
+-- Début du match
+exports['gf_respawn']:DisableRespawnForPlayer(playerId)
+
+-- Fin du match
+exports['gf_respawn']:EnableRespawnForPlayer(playerId)
+```
+
+## 🔍 Vérification
+
+Pour tester que tout fonctionne :
+
+1. Activez le debug : `Config.Debug = true`
+2. Tuez-vous dans le jeu (console : `kill`)
+3. Vérifiez les logs dans la console serveur
+4. Vous devriez voir :
+   ```
+   [GF-RESPAWN] === OnPlayerDeath déclenchée ===
+   [GF-RESPAWN] Joueur mort
+   [GF-RESPAWN] === Timer terminé ===
+   [GF-RESPAWN] Respawn disponible
+   ```
+
+## ❓ Problème ?
+
+### Le système ne se déclenche pas
+- Vérifiez que vous êtes dans le bucket 0 : `/getbucket` (si la commande existe)
+- Vérifiez `Config.EnableCompatibility` et `Config.AllowedBuckets`
+- Activez le debug pour voir les logs
+
+### Le système se déclenche dans mes jeux
+- Utilisez la **Méthode 1** (routing buckets) pour une désactivation automatique
+- Ou utilisez les exports pour désactiver manuellement
+
+### Interface NUI ne s'affiche pas
+- Vérifiez la console F8 pour les erreurs
+- Vérifiez que les fichiers HTML sont bien présents dans `html/`
+- Vérifiez les droits d'accès aux fichiers
+
+## 📚 Documentation complète
+
+Consultez les fichiers suivants pour plus d'infos :
+- `README.md` - Documentation complète
+- `INTEGRATION_EXAMPLES.lua` - 7 exemples d'intégration
+- `CHANGELOG.md` - Historique des versions
+
+## 💡 Conseils
+
+1. **Toujours utiliser les buckets** si votre script de jeu le permet
+2. **Tester avec le debug** activé au début
+3. **Documenter vos intégrations** pour faciliter la maintenance
+4. **Vérifier les buckets** si quelque chose ne fonctionne pas
+
+## 🎯 Prochaines étapes
+
+1. Configurez la position de spawn selon votre map
+2. Intégrez avec vos scripts de jeu (gunfight, etc.)
+3. Testez en jeu
+4. Désactivez le debug une fois que tout fonctionne
+
+## 📞 Support
+
+En cas de problème :
+1. Activez `Config.Debug = true`
+2. Reproduisez le problème
+3. Partagez les logs de la console
+
+---
+
+**Bon jeu ! 🎮**
+
+*Version 5.0.0 - Créé par KichtaBoyUnity*
